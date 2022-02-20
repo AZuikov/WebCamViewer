@@ -20,7 +20,7 @@
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <TextBox Grid.Row="0" Grid.Column="0" Text="Камеры" Margin="5"></TextBox>
-            <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" ItemsSource="{Binding Path=GetDevices}" DisplayMemberPath="Name" SelectedValuePath="Name" SelectedValue="{Binding Path=SelectedWebCamDevice}" ></ComboBox>
+            <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" ItemsSource="{Binding Path=GetDevices}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedWebCamDevice, UpdateSourceTrigger=PropertyChanged}" ></ComboBox>
             <Button Grid.Row="0" Grid.Column="2" Margin="5"> Подкючиться</Button>    
         </Grid>
     </Grid>
