@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebCamViewer", "WebCamViewer\WebCamViewer.csproj", "{FDAB5056-E542-4316-AF96-8E1400EE27A3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassTesting", "ClassTesting\ClassTesting.csproj", "{52306DD4-17FA-4477-BF90-9B14CF2EAA26}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{FDAB5056-E542-4316-AF96-8E1400EE27A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDAB5056-E542-4316-AF96-8E1400EE27A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDAB5056-E542-4316-AF96-8E1400EE27A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52306DD4-17FA-4477-BF90-9B14CF2EAA26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52306DD4-17FA-4477-BF90-9B14CF2EAA26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52306DD4-17FA-4477-BF90-9B14CF2EAA26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52306DD4-17FA-4477-BF90-9B14CF2EAA26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
