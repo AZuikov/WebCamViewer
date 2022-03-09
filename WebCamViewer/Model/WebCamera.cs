@@ -2,6 +2,8 @@
 using AForge.Video;
 using AForge.Video.DirectShow;
 using System.Drawing.Imaging;
+using System.IO;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 
@@ -17,23 +19,23 @@ namespace WebCamViewer.Model
         /// </summary>
         private VideoCaptureDevice videoSource;
 
-        public Bitmap Frame { get; private set; }
+        public BitmapImage Frame { get; private set; }
 
-        public WebCamera(VideoCaptureDevice videoCaptureDevice)
+        public WebCamera(FilterInfo filterInfo)
         {
-            videoSource = videoCaptureDevice; 
+            videoSource = new VideoCaptureDevice(filterInfo.MonikerString); 
             // set NewFrame event handler
             videoSource.NewFrame += new NewFrameEventHandler( video_NewFrame );
-            
         }
         
         private void video_NewFrame( object sender,
             NewFrameEventArgs eventArgs )
         {
             // get new frame
-             Bitmap bitmap = eventArgs.Frame;
+             Bitmap bitmap = (Bitmap)eventArgs.Frame.Clone();
              // process the frame
-             Frame = bitmap;
+             Frame = BitmapToImageSource(bitmap);
+             
         }
 
         public void StartCapture()
@@ -47,6 +49,24 @@ namespace WebCamViewer.Model
             // signal to stop
             videoSource.SignalToStop( );
         }
+        
+        private BitmapImage BitmapToImageSource(Bitmap bitmap)
+        {
+            using (var memory = new MemoryStream())
+            {
+                bitmap.Save(memory, ImageFormat.Bmp);
+                memory.Position = 0;
+                var bitmapimage = new BitmapImage();
+                bitmapimage.BeginInit();
+                bitmapimage.StreamSource = memory;
+                bitmapimage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapimage.EndInit();
+
+                return bitmapimage;
+            }
+        }
+        
+        
     }
 }
 

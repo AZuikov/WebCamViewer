@@ -1,9 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using System.Collections.ObjectModel;
 using AForge.Video.DirectShow;
-using WebCamViewer.Annotations;
 
 public class WebCamManager
 {
@@ -27,7 +23,7 @@ public class WebCamManager
 
     
 
-    public bool IsHaveDivices() => videoDevices.Count > 0;
+    public bool IsHaveDevices() => videoDevices.Count > 0;
 
    
 }

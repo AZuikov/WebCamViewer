@@ -1,24 +1,39 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Drawing;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Windows.Media.Imaging;
 using AForge.Video.DirectShow;
 using WebCamViewer.Annotations;
+using WebCamViewer.Model;
 
 namespace WebCamViewer.ViewModel
 {
-    public class AppViewModel:INotifyPropertyChanged
+    public class AppViewModel : INotifyPropertyChanged
     {
         private WebCamManager _webCamManager;
-        private FilterInfo selectedWebCamDevice;
-        public  FilterInfo SelectedWebCamDevice
+        private FilterInfo selectedWebCam;
+        private WebCamera _webCam;
+
+        public FilterInfo SelectedWebCamDevice
         {
-            get => selectedWebCamDevice;
+            get => selectedWebCam;
             set
             {
-                selectedWebCamDevice = value;
+                selectedWebCam = value;
                 OnPropertyChanged(nameof(SelectedWebCamDevice));
+                CurrentWebCam = new WebCamera(selectedWebCam);
             }
+        }
+
+        
+
+        public WebCamera CurrentWebCam
+        {
+            get => _webCam;
+            private set => _webCam = value;
         }
 
         public AppViewModel()
@@ -26,10 +41,7 @@ namespace WebCamViewer.ViewModel
             _webCamManager = new WebCamManager();
         }
 
-        public ObservableCollection<FilterInfo> GetDevices
-        {
-            get => _webCamManager.FindedVideoDevices;
-        }
+        public ObservableCollection<FilterInfo> GetDevices => _webCamManager.FindedVideoDevices;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -38,5 +50,7 @@ namespace WebCamViewer.ViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+       
     }
 }
