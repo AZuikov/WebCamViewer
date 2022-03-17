@@ -1,7 +1,5 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Media.Imaging;
+﻿using System.ComponentModel;
+using System.Windows;
 using WebCamViewer.ViewModel;
 
 namespace WebCamViewer.View
@@ -11,15 +9,6 @@ namespace WebCamViewer.View
     /// </summary>
     public partial class MainWindow
     {
-        public BitmapImage CurrentFrame
-        {
-            get
-            {
-                var currentWebCam = ((AppViewModel)DataContext).CurrentWebCam;
-                return currentWebCam.Frame;
-            }
-        }
-        
         public MainWindow()
         {
             InitializeComponent();
@@ -33,9 +22,20 @@ namespace WebCamViewer.View
 
         private void ConnectToWebCamButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var currentWebCam = ((AppViewModel)DataContext).CurrentWebCam;
+            var currentWebCam = ((AppViewModel) DataContext).CurrentWebCam;
             currentWebCam.StartCapture();
-            
         }
+
+        private void DisconnectFromWebCaButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var currentWebCam = ((AppViewModel) DataContext).CurrentWebCam;
+            currentWebCam.StopCapture();
+        }
+        
+       
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        
     }
 }

@@ -23,7 +23,7 @@ public class WebCamManager
 
     
 
-    public bool IsHaveDevices() => videoDevices.Count > 0;
+    public bool IsHaveDevices() => FindedVideoDevices.Count > 0;
 
    
 }
