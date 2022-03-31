@@ -10,7 +10,7 @@ namespace ClassTesting
         public bool TestVideoDeviceFind()
         {
             var webCamManager = new WebCamManager();
-            return webCamManager.IsHaveDivices();
+            return webCamManager.IsHaveDevices();
         }
     }
 }
