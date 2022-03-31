@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Windows;
+using AForge.Video.DirectShow;
 using WebCamViewer.ViewModel;
 
 namespace WebCamViewer.View
@@ -22,19 +23,15 @@ namespace WebCamViewer.View
 
         private void ConnectToWebCamButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var currentWebCam = ((AppViewModel) DataContext).CurrentWebCam;
+            var currentWebCam = ((AppViewModel) DataContext).WebCamManager.CurrentWebCam;
             currentWebCam.StartCapture();
         }
 
         private void DisconnectFromWebCaButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var currentWebCam = ((AppViewModel) DataContext).CurrentWebCam;
+            var currentWebCam = ((AppViewModel) DataContext).WebCamManager.CurrentWebCam;
             currentWebCam.StopCapture();
         }
-        
-       
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         
     }
