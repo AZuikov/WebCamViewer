@@ -3,86 +3,86 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
 using AForge.Video.DirectShow;
-using WebCamViewer;
 using WebCamViewer.Annotations;
-using WebCamViewer.Model;
 
-public class WebCamManager : INotifyPropertyChanged
+namespace WebCamViewer.Model
 {
-    private FilterInfoCollection videoDevices { get; set; }
-
-    private FilterInfo _selectedWebCam;
-    private WebCamera _webCam;
-    
-
-    private BitmapImage _frame;
-
-    public BitmapImage Frame
+    public class WebCamManager : INotifyPropertyChanged
     {
-        get => _frame;
-        private set
+        private FilterInfoCollection _videoDevices;
+        private FilterInfo _selectedWebCam;
+        private WebCamera _webCam;
+
+
+        private BitmapImage _frame;
+
+        public BitmapImage Frame
         {
-            _frame = value;
-            ManagerNewFrameReceived?.Invoke();
-        }
-    }
-
-    public delegate void CamManagerHandler();
-    public event CamManagerHandler ManagerNewFrameReceived;
-
-
-    public ObservableCollection<FilterInfo> FindedVideoDevices
-    {
-        get
-        {
-            // enumerate video devices
-            videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            ObservableCollection<FilterInfo> devices = new ObservableCollection<FilterInfo>();
-            foreach (FilterInfo videoDevice in videoDevices)
+            get => _frame;
+            private set
             {
-                devices.Add(videoDevice);
-            }
-
-            return devices;
-        }
-    }
-
-    public bool IsHaveDevices() => FindedVideoDevices.Count > 0;
-
-
-    public FilterInfo SelectedWebCamDevice
-    {
-        get => _selectedWebCam;
-        set
-        {
-            _selectedWebCam = value;
-            CurrentWebCam = new WebCamera(_selectedWebCam);
-            OnPropertyChanged(nameof(SelectedWebCamDevice));
-        }
-    }
-
-
-    public WebCamera CurrentWebCam
-    {
-        get => _webCam;
-        private set
-        {
-            _webCam = value;
-            _webCam.NewFrameReceived += () =>
-            {
-                Frame = _webCam.Frame;
+                _frame = value;
                 ManagerNewFrameReceived?.Invoke();
-            };
-            OnPropertyChanged(nameof(CurrentWebCam));
+            }
         }
-    }
+
+        public delegate void CamManagerHandler();
+
+        public event CamManagerHandler ManagerNewFrameReceived;
 
 
-    public event PropertyChangedEventHandler PropertyChanged;
+        public ObservableCollection<FilterInfo> FindedVideoDevices
+        {
+            get
+            {
+               _videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+                ObservableCollection<FilterInfo> devices = new ObservableCollection<FilterInfo>();
+                foreach (FilterInfo videoDevice in _videoDevices)
+                {
+                    devices.Add(videoDevice);
+                }
 
-    [NotifyPropertyChangedInvocator]
-    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                return devices;
+            }
+        }
+
+        public bool IsHaveDevices() => FindedVideoDevices.Count > 0;
+
+
+        public FilterInfo SelectedWebCamDevice
+        {
+            get => _selectedWebCam;
+            set
+            {
+                _selectedWebCam = value;
+                CurrentWebCam = new WebCamera(_selectedWebCam);
+                OnPropertyChanged(nameof(SelectedWebCamDevice));
+            }
+        }
+
+
+        public WebCamera CurrentWebCam
+        {
+            get => _webCam;
+            private set
+            {
+                _webCam = value;
+                _webCam.NewFrameReceived += () =>
+                {
+                    Frame = _webCam.Frame;
+                    ManagerNewFrameReceived?.Invoke();
+                };
+                OnPropertyChanged(nameof(CurrentWebCam));
+            }
+        }
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

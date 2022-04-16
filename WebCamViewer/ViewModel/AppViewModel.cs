@@ -1,9 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
 using AForge.Video.DirectShow;
 using WebCamViewer.Annotations;
+using WebCamViewer.Model;
 
 namespace WebCamViewer.ViewModel
 {
@@ -50,6 +52,20 @@ namespace WebCamViewer.ViewModel
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        /// <summary>
+        /// Сохраняет BitmapImage в файл PNG.
+        /// </summary>
+        /// <param name="image">ОБъект BitmapImage</param>
+        /// <param name="filePath">Путь сохраняемого файла.</param>
+        public void Save(string filePath)
+        {
+            BitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(CurrentFrame));
+
+            using var fileStream = new FileStream(filePath, FileMode.Create);
+            encoder.Save(fileStream);
         }
     }
 }

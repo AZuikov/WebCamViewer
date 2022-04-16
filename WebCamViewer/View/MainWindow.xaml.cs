@@ -57,7 +57,7 @@ namespace WebCamViewer.View
         /// <param name="e"></param>
         private void SaveCurrentFrameButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var bitmapImage = ((AppViewModel) DataContext).CurrentFrame;
+            
             var saveFileDialog = new SaveFileDialog
             {
                 Filter = "PNG (*.png)|*.png"
@@ -65,22 +65,10 @@ namespace WebCamViewer.View
             if (saveFileDialog.ShowDialog() == true)
             {
                 var filePath = saveFileDialog.FileName;
-                Save(bitmapImage, filePath);
+                ((AppViewModel) DataContext).Save(filePath);
             }
         }
 
-        /// <summary>
-        /// Сохраняет BitmapImage в файл PNG.
-        /// </summary>
-        /// <param name="image">ОБъект BitmapImage</param>
-        /// <param name="filePath">Путь сохраняемого файла.</param>
-        private void Save(BitmapImage image, string filePath)
-        {
-            BitmapEncoder encoder = new PngBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(image));
-
-            using var fileStream = new FileStream(filePath, FileMode.Create);
-            encoder.Save(fileStream);
-        }
+       
     }
 }
