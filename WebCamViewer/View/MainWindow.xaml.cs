@@ -1,14 +1,13 @@
-﻿using System.ComponentModel;
+﻿using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using AForge.Video.DirectShow;
 using Microsoft.Win32;
 using WebCamViewer.ViewModel;
 
 namespace WebCamViewer.View
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    ///     Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow
     {
@@ -18,17 +17,32 @@ namespace WebCamViewer.View
             DataContext = new AppViewModel();
         }
 
+        /// <summary>
+        ///     Кнопка обновления списка устройств (камер).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RefreshDeviceListButton_OnClick(object sender, RoutedEventArgs e)
         {
             DataContext = new AppViewModel();
         }
 
+        /// <summary>
+        ///     Кнопка подключения к веб-камере.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ConnectToWebCamButton_OnClick(object sender, RoutedEventArgs e)
         {
             var currentWebCam = ((AppViewModel) DataContext).WebCamManager.CurrentWebCam;
             currentWebCam.StartCapture();
         }
 
+        /// <summary>
+        ///     Кнопка отключения от веб-камеры.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DisconnectFromWebCaButton_OnClick(object sender, RoutedEventArgs e)
         {
             var currentWebCam = ((AppViewModel) DataContext).WebCamManager.CurrentWebCam;
@@ -36,27 +50,37 @@ namespace WebCamViewer.View
         }
 
 
+        /// <summary>
+        ///     Кнопка сохранения текущего кадра.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SaveCurrentFrameButton_OnClick(object sender, RoutedEventArgs e)
         {
             var bitmapImage = ((AppViewModel) DataContext).CurrentFrame;
-            SaveFileDialog saveFileDialog = new SaveFileDialog();
-            saveFileDialog.Filter = "PNG (*.png)|*.png";
+            var saveFileDialog = new SaveFileDialog
+            {
+                Filter = "PNG (*.png)|*.png"
+            };
             if (saveFileDialog.ShowDialog() == true)
             {
-               var filePath = saveFileDialog.FileName;
-                Save(bitmapImage,filePath);
+                var filePath = saveFileDialog.FileName;
+                Save(bitmapImage, filePath);
             }
         }
-        
-        public void Save( BitmapImage image, string filePath)
+
+        /// <summary>
+        /// Сохраняет BitmapImage в файл PNG.
+        /// </summary>
+        /// <param name="image">ОБъект BitmapImage</param>
+        /// <param name="filePath">Путь сохраняемого файла.</param>
+        private void Save(BitmapImage image, string filePath)
         {
             BitmapEncoder encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(image));
 
-            using (var fileStream = new System.IO.FileStream(filePath, System.IO.FileMode.Create))
-            {
-                encoder.Save(fileStream);
-            }
+            using var fileStream = new FileStream(filePath, FileMode.Create);
+            encoder.Save(fileStream);
         }
     }
 }

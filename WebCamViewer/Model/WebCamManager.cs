@@ -13,7 +13,7 @@ public class WebCamManager : INotifyPropertyChanged
 
     private FilterInfo _selectedWebCam;
     private WebCamera _webCam;
-    private WebCamViewerCommand _getNewFrameCommand;
+    
 
     private BitmapImage _frame;
 

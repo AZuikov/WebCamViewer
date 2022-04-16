@@ -26,11 +26,18 @@ namespace WebCamViewer.ViewModel
         public AppViewModel()
         {
             WebCamManager = new WebCamManager();
+            //подписываемся на событие получение нового кадра с камеры
             WebCamManager.ManagerNewFrameReceived += () => CurrentFrame = WebCamManager.Frame;
         }
 
+        /// <summary>
+        /// Список найденных устройств.
+        /// </summary>
         public ObservableCollection<FilterInfo> GetDevices => WebCamManager.FindedVideoDevices;
         
+        /// <summary>
+        /// Выбранное устройство.
+        /// </summary>
         public FilterInfo SelectedWebCamDevice
         {
             get => WebCamManager.SelectedWebCamDevice;
