@@ -3,47 +3,68 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:WebCamViewer.ViewModel"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-    <Grid >
+    <Window.DataContext>
+        <vm:AppViewModel />
+    </Window.DataContext>
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.Resources>
             <Style TargetType="Button">
-                <Setter Property="Margin" Value="5"/>
+                <Setter Property="Margin" Value="5" />
             </Style>
         </Grid.Resources>
         <Grid Grid.Row="0" Name="SubGridRow1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*" />
+
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox Grid.Row="0" Grid.Column="0" Text="Камеры" Margin="5"></TextBox>
-            <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" ItemsSource="{Binding Path=GetDevices}" 
-                      DisplayMemberPath="Name" SelectedItem="{Binding Path =SelectedWebCamDevice, 
-                      UpdateSourceTrigger=PropertyChanged}" ></ComboBox>
-            <Button Grid.Row="0" Grid.Column="2"  Click="RefreshDeviceListButton_OnClick"> Обновить список</Button>
-            <Button Grid.Row="0" Grid.Column="3"  Click="ConnectToWebCamButton_OnClick"> Подключиться</Button>    
-            <Button Grid.Row="0" Grid.Column="4"  Click="DisconnectFromWebCaButton_OnClick"> Отключиться</Button>  
+            <Grid Grid.Row="0" Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+
+                </Grid.RowDefinitions>
+                <TextBox Grid.Column="0" Grid.Row="0" Text="Камеры" Margin="5" />
+                <ComboBox Grid.Row="0" Grid.Column="1" Margin="5" ItemsSource="{Binding Path=GetDevices}"
+                          DisplayMemberPath="Name"
+                          SelectedItem="{Binding Path =SelectedWebCamDevice, 
+                      UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBox Grid.Row="1" Grid.Column="0" Text="Разрешения" Margin="5" />
+                <ComboBox Grid.Row="1" Grid.Column="1" Margin="5" ItemsSource="{Binding Path=Resolutions}"
+                          SelectedItem="{Binding Path=CurrentResolution, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+            <Button Grid.Row="0" Grid.Column="1" Command="{Binding RefreshDeviceList}"> Обновить список</Button>
+            <Button Grid.Row="0" Grid.Column="2" Command="{Binding StartWebCam}"> Подключиться</Button>
+            <Button Grid.Row="0" Grid.Column="3" Command="{Binding StopWebCam}"> Отключиться</Button>
         </Grid>
-        
+
         <Grid Grid.Row="1" Name="SubGridRow2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-           
-            <Image Grid.Row="0" Grid.Column="0" Name="ImageOnForm" Source="{Binding Path=CurrentFrame, UpdateSourceTrigger=PropertyChanged}" > </Image>
+
+            <Image Grid.Row="0" Grid.Column="0" Name="ImageOnForm"
+                   Source="{Binding Path=CurrentFrame, UpdateSourceTrigger=PropertyChanged}" />
             <StackPanel Grid.Column="1" Margin="5">
-                <Button Click="SaveCurrentFrameButton_OnClick">Сделать снимок</Button>
-                <Button >Настройки камеры</Button>
+                <Button Command="{Binding SaveCapture}">Сделать снимок</Button>
+                <Button>Настройки камеры</Button>
             </StackPanel>
         </Grid>
     </Grid>
-    
+
 </Window>

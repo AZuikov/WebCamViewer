@@ -1,5 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
+using WebCamViewer.Model;
 
 namespace ClassTesting
 {

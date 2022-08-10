@@ -1,9 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Media.Imaging;
 using AForge.Video.DirectShow;
+using Microsoft.Win32;
 using WebCamViewer.Annotations;
 using WebCamViewer.Model;
 
@@ -11,7 +13,7 @@ namespace WebCamViewer.ViewModel
 {
     public class AppViewModel : INotifyPropertyChanged
     {
-        public  WebCamManager WebCamManager { get; }
+        public  WebCamManager WebCamManager { get; private set; }
 
         private BitmapImage _frameOnForm;
 
@@ -27,7 +29,7 @@ namespace WebCamViewer.ViewModel
 
         public AppViewModel()
         {
-            WebCamManager = new WebCamManager();
+            RefreshWebCamList();
             //подписываемся на событие получение нового кадра с камеры
             WebCamManager.ManagerNewFrameReceived += () => CurrentFrame = WebCamManager.Frame;
         }
@@ -44,6 +46,14 @@ namespace WebCamViewer.ViewModel
         {
             get => WebCamManager.SelectedWebCamDevice;
             set => WebCamManager.SelectedWebCamDevice = value;
+        }
+
+        public string[] Resolutions => WebCamManager.CurrentWebCam.Resolutions;
+
+        public string CurrentResolution
+        {
+            get => WebCamManager.CurrentWebCam.CurrentResolution;
+            set => WebCamManager.CurrentWebCam.CurrentResolution = value;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -67,5 +77,68 @@ namespace WebCamViewer.ViewModel
             using var fileStream = new FileStream(filePath, FileMode.Create);
             encoder.Save(fileStream);
         }
+
+
+        #region Commands
+
+        public RelayCommand StopWebCam
+        {
+            get { return new RelayCommand(obj => { WebCamManager.CurrentWebCam?.StopCapture(); }); }
+        }
+
+        public RelayCommand StartWebCam
+        {
+            get { return new RelayCommand(obj => { WebCamManager.CurrentWebCam?.StartCapture(); }); }
+        }
+
+        public RelayCommand RefreshDeviceList
+        {
+            get
+            {
+                return new RelayCommand(obj =>
+                {
+                    if (WebCamManager.CurrentWebCam != null)
+                    {
+                        WebCamManager.CurrentWebCam.StopCapture();
+                    }
+                    RefreshWebCamList();
+                });
+            }
+        }
+
+        /// <summary>
+        /// Выполняет формирование списка камер и подписывается на событие получения кадра с камеры.
+        /// </summary>
+        private void RefreshWebCamList()
+        {
+            //todo нужно отписываться от события при пересоздании объекта
+            WebCamManager = new WebCamManager();
+            //подписываемся на событие получение нового кадра с камеры
+            WebCamManager.ManagerNewFrameReceived += () => CurrentFrame = WebCamManager.Frame;
+            SelectedWebCamDevice = GetDevices.FirstOrDefault();
+            CurrentResolution = Resolutions.First();
+
+        }
+
+        public RelayCommand SaveCapture
+        {
+            get
+            {
+                return new RelayCommand(obj =>
+                {
+                    var saveFileDialog = new SaveFileDialog
+                    {
+                        Filter = "PNG (*.png)|*.png"
+                    };
+                    if (saveFileDialog.ShowDialog() == true)
+                    {
+                        var filePath = saveFileDialog.FileName;
+                        Save(filePath);
+                    }
+                });
+            }
+        }
+
+        #endregion
     }
 }
